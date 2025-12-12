@@ -201,7 +201,7 @@ const swiperModules = [Autoplay, Pagination, EffectCards]
                   class="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent"
                 ></div>
                 <div
-                  class="bg-overlay/50 text-primary absolute top-1.5 right-1.5 flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-[10px] backdrop-blur-sm"
+                  class="absolute top-1.5 right-1.5 flex items-center gap-0.5 rounded-full bg-black/40 px-1.5 py-0.5 text-[10px] text-white backdrop-blur-md"
                 >
                   <span class="icon-[mdi--play] h-2.5 w-2.5"></span>
                   {{ formatCount(pl.playCount) }}
@@ -229,6 +229,9 @@ const swiperModules = [Autoplay, Pagination, EffectCards]
               </span>
               {{ t('components.discover.hotArtists') }}
             </h2>
+            <router-link to="/artists" class="view-more-link">
+              {{ t('components.discover.viewMore') }}
+            </router-link>
           </div>
           <div class="scrollbar-hide flex gap-3 overflow-x-auto px-4 pb-2">
             <router-link
@@ -292,7 +295,7 @@ const swiperModules = [Autoplay, Pagination, EffectCards]
                   class="absolute inset-0 bg-linear-to-t from-black/70 via-transparent to-transparent"
                 ></div>
                 <div
-                  class="bg-overlay/50 text-primary absolute top-2 right-2 flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-[10px] backdrop-blur-sm"
+                  class="absolute top-1.5 right-1.5 flex items-center gap-0.5 rounded-full bg-black/40 px-1.5 py-0.5 text-[10px] text-white backdrop-blur-md"
                 >
                   <span class="icon-[mdi--play] h-2.5 w-2.5"></span>
                   {{ formatCount(mv.playCount) }}

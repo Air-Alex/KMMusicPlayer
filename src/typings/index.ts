@@ -9,8 +9,6 @@ export interface PlaylistInfo {
   playCount?: number
   likes: string
   category: string
-  emoji?: string
-  gradient: string
   coverImgUrl: string
 }
 
@@ -21,8 +19,6 @@ export interface PlaylistSong {
   artist: string
   album: string
   duration: number
-  emoji: string
-  gradient: string
   liked: boolean
   url?: string
   cover: string
@@ -39,7 +35,6 @@ export interface ReplyItem {
 export interface CommentItem {
   username: string
   avatarUrl: string
-  avatarGradient: string
   time: string
   content: string
   likes: number

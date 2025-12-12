@@ -2,6 +2,7 @@
 import { commentMusic } from '@/api'
 import Pagination from '@/components/Ui/Pagination.vue'
 import PageSkeleton from '@/components/PageSkeleton.vue'
+import GlassButton from '@/components/Ui/GlassButton.vue'
 
 const show = defineModel<boolean>('show', { default: false })
 const props = defineProps<{ songId: number | string | null }>()
@@ -66,12 +67,14 @@ const close = () => (show.value = false)
     <Transition name="dialog" appear>
       <div v-if="show" class="relative z-10 w-full max-w-2xl">
         <div class="glass-container-strong overflow-hidden">
-          <button
-            class="absolute top-4 right-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-white/10 transition-all hover:bg-white/20"
-            @click="close"
-          >
-            <span class="icon-[mdi--close] h-4 w-4 text-primary" />
-          </button>
+          <div class="absolute top-4 right-4 z-20">
+            <GlassButton
+              variant="ghost"
+              size="icon-sm"
+              :icon="'icon-[mdi--close]'"
+              @click="close"
+            />
+          </div>
 
           <div class="relative p-6 pb-4">
             <div class="mb-4 flex items-center gap-4">

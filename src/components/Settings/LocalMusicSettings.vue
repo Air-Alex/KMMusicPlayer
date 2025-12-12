@@ -4,6 +4,7 @@ import { useAudio } from '@/composables/useAudio'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 import { formatTime } from '@/utils/audioUtils'
+import GlassButton from '@/components/Ui/GlassButton.vue'
 
 const { t } = useI18n()
 const localMusicStore = useLocalMusicStore()
@@ -75,22 +76,23 @@ const handlePlayOne = (music: any) => {
         </div>
       </div>
       <div class="flex gap-2">
-        <button
-          class="flex items-center gap-1 rounded-lg bg-white/10 px-3 py-1.5 text-xs text-primary transition-colors hover:bg-white/20"
+        <GlassButton
+          variant="secondary"
+          size="sm"
+          :icon="'icon-[mdi--play]'"
           @click="handlePlayAll"
           :disabled="musics.length === 0"
-          :class="{ 'opacity-50 cursor-not-allowed': musics.length === 0 }"
         >
-          <span class="icon-[mdi--play] h-4 w-4" />
           {{ t('actions.playAll') }}
-        </button>
-        <button
-          class="flex items-center gap-1 rounded-lg bg-primary/20 text-primary px-3 py-1.5 text-xs transition-colors hover:bg-primary/30"
+        </GlassButton>
+        <GlassButton
+          variant="primary"
+          size="sm"
+          :icon="'icon-[mdi--upload]'"
           @click="triggerFileInput"
         >
-          <span class="icon-[mdi--upload] h-4 w-4" />
           {{ t('actions.upload') }}
-        </button>
+        </GlassButton>
       </div>
     </div>
 
@@ -126,14 +128,14 @@ const handlePlayOne = (music: any) => {
              <span class="text-primary/50 text-[10px]">{{ formatTime(music.duration) }} • {{ (music.file.size / 1024 / 1024).toFixed(2) }} MB</span>
            </div>
         </div>
-        
-        <button
-          class="text-primary/40 hover:text-red-400 p-1.5 rounded-full hover:bg-white/10 transition-colors"
+
+        <GlassButton
+          variant="ghost"
+          size="icon-sm"
+          :icon="'icon-[mdi--trash-can-outline]'"
           @click="handleDelete(music.id)"
           :title="t('common.delete')"
-        >
-          <span class="icon-[mdi--trash-can-outline] h-4 w-4" />
-        </button>
+        />
       </div>
     </div>
   </div>

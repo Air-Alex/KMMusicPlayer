@@ -55,7 +55,7 @@ const handleClick = (s: Song, i: number) => {
       v-for="(song, index) in songs"
       :key="song.id + '-' + index"
       class="group flex items-center gap-3 rounded-2xl p-3 transition-all duration-300"
-      :class="isCurrent(song) ? 'song-item-active' : ''"
+      :class="isCurrent(song) ? 'bg-primary/10' : ''"
       @click="handleClick(song, index)"
     >
       <div class="song-cover relative h-14 w-14 shrink-0 overflow-hidden rounded-xl">
@@ -67,9 +67,9 @@ const handleClick = (s: Song, i: number) => {
         />
         <div
           v-else
-          class="flex h-full w-full items-center justify-center bg-linear-to-br from-pink-500/30 to-purple-600/30"
+          class="flex h-full w-full items-center justify-center bg-linear-to-br from-primary/20 to-primary/10"
         >
-          <span class="icon-[mdi--music-note] h-6 w-6 opacity-60" />
+          <span class="icon-[mdi--music-note] h-6 w-6 opacity-60 text-primary" />
         </div>
         <div
           v-if="isCurrent(song)"
@@ -84,7 +84,7 @@ const handleClick = (s: Song, i: number) => {
       <div class="min-w-0 flex-1">
         <p
           class="song-name truncate text-sm font-medium"
-          :class="isCurrent(song) ? 'text-pink-400' : ''"
+          :class="isCurrent(song) ? 'text-primary' : ''"
         >
           {{ song.name }}
         </p>
@@ -108,7 +108,7 @@ const handleClick = (s: Song, i: number) => {
       v-for="(song, index) in songs"
       :key="song.id"
       class="song-item-compact group flex items-center gap-3 rounded-xl p-2.5 transition-all duration-200"
-      :class="isCurrent(song) ? 'song-item-active' : ''"
+      :class="isCurrent(song) ? 'bg-primary/10' : ''"
       @click="handleClick(song, index)"
     >
       <div v-if="showIndex" class="w-6 shrink-0 text-center">
@@ -120,7 +120,7 @@ const handleClick = (s: Song, i: number) => {
         <span
           v-else
           class="song-index text-xs font-bold"
-          :class="index < 3 ? 'text-pink-400' : ''"
+          :class="index < 3 ? 'text-primary' : ''"
           >{{ index + 1 }}</span
         >
       </div>
@@ -133,15 +133,15 @@ const handleClick = (s: Song, i: number) => {
         />
         <div
           v-else
-          class="flex h-full w-full items-center justify-center bg-linear-to-br from-pink-500/30 to-purple-600/30"
+          class="flex h-full w-full items-center justify-center bg-linear-to-br from-primary/20 to-primary/10"
         >
-          <span class="icon-[mdi--music-note] h-5 w-5 opacity-50" />
+          <span class="icon-[mdi--music-note] h-5 w-5 opacity-50 text-primary" />
         </div>
       </div>
       <div class="min-w-0 flex-1">
         <p
           class="song-name truncate text-sm font-medium"
-          :class="isCurrent(song) ? 'text-pink-400' : ''"
+          :class="isCurrent(song) ? 'text-primary' : ''"
         >
           {{ song.name }}
         </p>
@@ -161,15 +161,6 @@ const handleClick = (s: Song, i: number) => {
 
 .song-item:active:not(.song-item-active) {
   background: var(--glass-bg-button);
-}
-
-.song-item-active {
-  background: linear-gradient(to right, rgba(236, 72, 153, 0.2), rgba(139, 92, 246, 0.2));
-}
-
-:root.dark .song-item-active,
-html.dark .song-item-active {
-  background: linear-gradient(to right, rgba(236, 72, 153, 0.25), rgba(139, 92, 246, 0.25));
 }
 
 .song-item-compact:not(.song-item-active):active {

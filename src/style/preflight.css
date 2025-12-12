@@ -18,9 +18,9 @@
     --playlist-bubble-bg: rgba(255, 255, 255, 0.9);
     --glass-container-strong-bg: rgba(255, 255, 255, 0.92);
     --mask-bg: rgba(255, 255, 255, 0.06);
-    --accent-from: #ec4899;
-    --accent-to: #8b5cf6;
-    --accent: #8b5cf6;
+    --accent-from: rgba(236, 72, 153, 1);
+    --accent-to: rgba(139, 92, 246, 1);
+    --accent: rgba(139, 92, 246, 1);
     --progress-track-bg: rgba(17, 24, 39, 0.16);
     --progress-fill-bg: linear-gradient(90deg, var(--accent-from), var(--accent-to));
     --skeleton-bg: #d9dadb;
@@ -47,9 +47,9 @@
     --playlist-bubble-bg: rgba(0, 0, 0, 0.9);
     --glass-container-strong-bg: rgba(0, 0, 0, 0.9);
     --mask-bg: rgba(0, 0, 0, 0.3);
-    --accent-from: #db2777;
-    --accent-to: #7c3aed;
-    --accent: #a78bfa;
+    --accent-from: rgba(244, 114, 182, 1);
+    --accent-to: rgba(167, 139, 250, 1);
+    --accent: rgba(246, 51, 154, 1);
     --progress-track-bg: rgba(255, 255, 255, 0.22);
     --progress-fill-bg: linear-gradient(90deg, var(--accent-from), var(--accent-to));
     --skeleton-bg: rgba(255, 255, 255, 0.08);

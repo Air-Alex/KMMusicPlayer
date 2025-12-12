@@ -1,5 +1,9 @@
 <script setup lang="ts">
+import { ref, reactive, watch, onMounted, onUnmounted, computed, useTemplateRef, toRefs } from 'vue'
 import { cloudSearch, searchSuggest, searchDefault } from '@/api'
+import MobileSongList from '@/components/Mobile/MobileSongList.vue'
+import PageSkeleton from '@/components/PageSkeleton.vue'
+import GlassButton from '@/components/Ui/GlassButton.vue'
 import LazyImage from '@/components/Ui/LazyImage.vue'
 import Pagination from '@/components/Ui/Pagination.vue'
 import { Song } from '@/stores/interface'
@@ -9,6 +13,7 @@ import { Swiper, SwiperSlide } from 'swiper/vue'
 import { EffectCreative } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/effect-creative'
+import { formatCount } from '@/utils/time'
 
 const creativeEffect = {
   prev: {
@@ -32,7 +37,7 @@ type PlaylistItem = {
 type MVItem = { id: number | string; name: string; cover: string; artist: string }
 
 const { t } = useI18n()
-const { setPlaylist, play, currentSong } = useAudio()
+const { setPlaylist, play } = useAudio()
 
 interface MobileSearchState {
   q: string
@@ -252,18 +257,6 @@ const mapToStoreSong = (s: Song): Song => ({
   cover: s.cover,
 })
 
-const playSong = (s: Song, index: number) => {
-  const list: Song[] = state.songs.map(mapToStoreSong)
-  setPlaylist(list, index)
-  play(list[index], index)
-}
-
-const isCurrent = (s: Song) => {
-  const cur = currentSong.value
-  if (!cur) return false
-  return String(s.id) === String(cur.id)
-}
-
 const playAllSongs = () => {
   if (!state.songs.length) return
   const list: Song[] = state.songs.map(mapToStoreSong)
@@ -324,7 +317,7 @@ watch(
             <span class="icon-[mdi--close-circle] h-4 w-4"></span>
           </button>
           <button
-            class="search-btn text-white flex h-8 items-center gap-1.5 rounded-full px-4 text-xs font-medium transition-all active:scale-95"
+            class="search-btn flex h-8 items-center gap-1.5 rounded-full px-4 text-xs font-medium text-white transition-all active:scale-95"
             @click="handleSearchClick"
           >
             <span class="icon-[mdi--magnify] h-4 w-4"></span>
@@ -391,13 +384,15 @@ watch(
               <p class="info-text text-xs">
                 {{ t('search.result', { count: songTotal }) }}
               </p>
-              <button
-                class="play-all-button text-white flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-medium shadow-lg transition-all duration-200 active:scale-95"
+              <GlassButton
+                variant="primary"
+                size="xs"
+                icon="icon-[mdi--play]"
+                rounded
                 @click="playAllSongs"
               >
-                <span class="icon-[mdi--play] h-4 w-4" />
                 {{ t('actions.playAll') }}
-              </button>
+              </GlassButton>
             </div>
 
             <div v-if="songs.length === 0" class="empty-state flex flex-col items-center py-16">
@@ -449,10 +444,10 @@ watch(
                   />
                   <div class="playlist-cover-overlay absolute inset-0"></div>
                   <div
-                    class="bg-overlay/50 text-primary/90 absolute top-2 right-2 flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-medium backdrop-blur-md"
+                    class="absolute top-2 right-2 flex items-center gap-1 rounded-lg bg-black/40 px-2 py-1 text-[11px] font-medium text-white backdrop-blur-md"
                   >
                     <span class="icon-[mdi--music-note] h-3 w-3"></span>
-                    {{ p.trackCount }}
+                    {{ formatCount(p.trackCount) }}
                   </div>
                   <div
                     class="playlist-play-btn absolute right-2 bottom-2 flex h-10 w-10 items-center justify-center rounded-full shadow-lg transition-all duration-300"
@@ -511,11 +506,11 @@ watch(
                     <span class="icon-[mdi--play] text-primary h-7 w-7"></span>
                   </div>
                   <div class="absolute right-0 bottom-0 left-0 p-3">
-                    <p class="mv-title text-primary truncate text-sm font-semibold">{{ m.name }}</p>
-                    <p class="mv-artist text-primary/70 mt-0.5 truncate text-xs">{{ m.artist }}</p>
+                    <p class="mv-title text-white truncate text-sm font-semibold">{{ m.name }}</p>
+                    <p class="mv-artist text-white/70 mt-0.5 truncate text-xs">{{ m.artist }}</p>
                   </div>
                   <div
-                    class="bg-overlay/50 text-primary/90 absolute top-2 left-2 flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-medium backdrop-blur-md"
+                    class="bg-black/40 text-white absolute top-2 left-2 flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-medium backdrop-blur-md"
                   >
                     <span class="icon-[mdi--video] h-3 w-3"></span>
                     MV
@@ -546,7 +541,7 @@ watch(
 .dropdown-enter-from,
 .dropdown-leave-to {
   opacity: 0;
-  transform: translateY(-8px);
+  transform: translateY(-10px);
 }
 
 .search-icon {
@@ -594,7 +589,7 @@ watch(
 .suggest-tag {
   background: var(--glass-hover-item-bg);
   color: var(--glass-text);
-  opacity: 0.8;
+  border: 1px solid var(--glass-border);
 }
 
 .suggest-tag:active {
@@ -608,10 +603,10 @@ watch(
 }
 
 .tab-button-active {
-  background: linear-gradient(to right, #ec4899, #8b5cf6);
-  color: white;
+  background: var(--glass-hover-item-bg);
+  color: var(--glass-text);
   opacity: 1;
-  box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 .info-text {
@@ -619,14 +614,7 @@ watch(
   opacity: 0.5;
 }
 
-.play-all-button {
-  background: linear-gradient(to right, #ec4899, #8b5cf6);
-  box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
-}
 
-.play-all-button:active {
-  box-shadow: 0 2px 8px rgba(236, 72, 153, 0.3);
-}
 
 .empty-icon {
   background: linear-gradient(to bottom right, rgba(236, 72, 153, 0.15), rgba(139, 92, 246, 0.15));
@@ -692,16 +680,7 @@ html.dark .song-cover {
 }
 
 .playlist-cover {
-  box-shadow:
-    0 8px 24px -4px rgba(0, 0, 0, 0.15),
-    0 4px 8px -2px rgba(0, 0, 0, 0.08);
-}
-
-:root.dark .playlist-cover,
-html.dark .playlist-cover {
-  box-shadow:
-    0 8px 24px -4px rgba(0, 0, 0, 0.4),
-    0 4px 8px -2px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .playlist-cover-overlay {
@@ -733,16 +712,7 @@ html.dark .playlist-cover {
 }
 
 .mv-cover {
-  box-shadow:
-    0 12px 32px -4px rgba(0, 0, 0, 0.2),
-    0 4px 12px -2px rgba(0, 0, 0, 0.1);
-}
-
-:root.dark .mv-cover,
-html.dark .mv-cover {
-  box-shadow:
-    0 12px 32px -4px rgba(0, 0, 0, 0.5),
-    0 4px 12px -2px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .mv-cover-overlay {
@@ -756,8 +726,8 @@ html.dark .mv-cover {
 }
 
 .mv-play-btn {
-  background: linear-gradient(135deg, rgba(236, 72, 153, 0.9), rgba(139, 92, 246, 0.9));
-  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);
 }
 
 .mv-card:active .mv-play-btn {

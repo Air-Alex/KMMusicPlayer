@@ -1,4 +1,7 @@
 @theme {
   --color-primary: var(--glass-text);
   --color-overlay: var(--glass-overlay);
+  --color-brand: var(--accent);
+  --color-brand-from: var(--accent-from);
+  --color-brand-to: var(--accent-to);
 }

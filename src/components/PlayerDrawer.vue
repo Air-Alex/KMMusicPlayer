@@ -6,6 +6,7 @@ import { commentMusic } from '@/api'
 import SongCommentsDialog from '@/components/Comments/SongCommentsDialog.vue'
 import MusicProgress from '@/components/Ui/MusicProgress.vue'
 import VolumeControl from '@/components/Ui/VolumeControl.vue'
+import GlassButton from '@/components/Ui/GlassButton.vue'
 import { useNow, useOnline, useBattery } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import { useGlobalStore } from '@/stores/modules/global'
@@ -471,32 +472,29 @@ onUnmounted(() => {
     <div class="absolute top-0 right-0 left-0 z-10 flex items-center justify-between p-4 lg:p-6">
       <div class="flex items-center gap-3">
         <div class="glass-toolbar flex items-center gap-1 rounded-2xl p-1.5">
-          <button
-            class="toolbar-btn"
+          <GlassButton
+            variant="ghost"
+            size="icon-sm"
+            :icon="'icon-[mdi--format-font-size-decrease]'"
             :title="t('player.fontDec')"
             @click="state.lyricsScale = Math.max(0.8, state.lyricsScale - 0.05)"
-          >
-            <span class="icon-[mdi--format-font-size-decrease] h-4 w-4"></span>
-          </button>
-          <button
-            class="toolbar-btn"
+          />
+          <GlassButton
+            variant="ghost"
+            size="icon-sm"
+            :icon="'icon-[mdi--format-font-size-increase]'"
             :title="t('player.fontInc')"
             @click="state.lyricsScale = Math.min(1.4, state.lyricsScale + 0.05)"
-          >
-            <span class="icon-[mdi--format-font-size-increase] h-4 w-4"></span>
-          </button>
+          />
           <div class="mx-1 h-4 w-px bg-white/10"></div>
-          <button
-            class="toolbar-btn"
-            :class="state.autoScroll ? 'active' : ''"
+          <GlassButton
+            variant="ghost"
+            size="icon-sm"
+            :icon="state.autoScroll ? 'icon-[mdi--autorenew]' : 'icon-[mdi--pause]'"
+            :active="state.autoScroll"
             :title="t('player.autoCenter')"
             @click="toggleAutoScroll"
-          >
-            <span
-              :class="state.autoScroll ? 'icon-[mdi--autorenew]' : 'icon-[mdi--pause]'"
-              class="h-4 w-4"
-            ></span>
-          </button>
+          />
         </div>
 
         <div class="glass-toolbar hidden items-center gap-3 rounded-2xl px-4 py-2 sm:flex">
@@ -524,63 +522,64 @@ onUnmounted(() => {
       </div>
 
       <div class="flex items-center gap-3">
-        <button
-          class="glass-toolbar flex items-center justify-center rounded-xl p-2 lg:hidden"
-          @click="state.showMobileLyrics = !state.showMobileLyrics"
-        >
-          <span
-            :class="state.showMobileLyrics ? 'icon-[mdi--album]' : 'icon-[mdi--text-box-outline]'"
-            class="h-5 w-5 text-white/80"
-          ></span>
-        </button>
+        <div class="glass-toolbar lg:hidden">
+          <GlassButton
+            variant="ghost"
+            size="icon-md"
+            :icon="state.showMobileLyrics ? 'icon-[mdi--album]' : 'icon-[mdi--text-box-outline]'"
+            @click="state.showMobileLyrics = !state.showMobileLyrics"
+          />
+        </div>
 
         <div
           v-if="lyricsTrans.length || lyricsRoma.length"
           class="glass-toolbar hidden items-center gap-2 rounded-2xl p-1.5 lg:flex"
         >
-          <button
+          <GlassButton
             v-if="lyricsTrans.length"
-            class="toolbar-btn-text"
-            :class="showTrans ? 'active' : ''"
+            variant="ghost"
+            size="sm"
+            :icon="'icon-[mdi--translate]'"
+            :active="showTrans"
             @click="toggleTransBtn"
           >
-            <span class="icon-[mdi--translate] h-4 w-4"></span>
-            <span>{{ t('player.translate') }}</span>
-          </button>
-          <button
+            {{ t('player.translate') }}
+          </GlassButton>
+          <GlassButton
             v-if="lyricsRoma.length"
-            class="toolbar-btn-text"
-            :class="showRoma ? 'active' : ''"
+            variant="ghost"
+            size="sm"
+            :icon="'icon-[mdi--alphabetical-variant]'"
+            :active="showRoma"
             @click="toggleRomaBtn"
           >
-            <span class="icon-[mdi--alphabetical-variant] h-4 w-4"></span>
-            <span>{{ t('player.roma') }}</span>
-          </button>
+            {{ t('player.roma') }}
+          </GlassButton>
         </div>
 
-        <button
-          class="action-btn"
-          :class="!state.useCoverBg ? 'active' : ''"
-          @click="state.useCoverBg = !state.useCoverBg"
+        <GlassButton
+          variant="secondary"
+          size="icon-lg"
+          :icon="state.useCoverBg ? 'icon-[mdi--image-multiple-outline]' : 'icon-[mdi--palette-swatch]'"
+          :active="!state.useCoverBg"
           :title="t('player.toggleBg')"
-        >
-          <span
-            :class="[
-              state.useCoverBg
-                ? 'icon-[mdi--image-multiple-outline]'
-                : 'icon-[mdi--palette-swatch]',
-              'h-5 w-5',
-            ]"
-          ></span>
-        </button>
+          @click="state.useCoverBg = !state.useCoverBg"
+        />
 
-        <button class="action-btn" @click="cycleTheme" :title="t('components.settings.themeMode')">
-          <span :class="[themeIcon, 'h-5 w-5']"></span>
-        </button>
+        <GlassButton
+          variant="secondary"
+          size="icon-lg"
+          :icon="themeIcon"
+          :title="t('components.settings.themeMode')"
+          @click="cycleTheme"
+        />
 
-        <button @click="isOpen = false" class="action-btn close-btn">
-          <span class="icon-[mdi--chevron-down] h-6 w-6"></span>
-        </button>
+        <GlassButton
+          variant="secondary"
+          size="icon-lg"
+          :icon="'icon-[mdi--chevron-down]'"
+          @click="isOpen = false"
+        />
       </div>
     </div>
 
@@ -650,32 +649,37 @@ onUnmounted(() => {
       </div>
 
       <div class="mb-4 flex items-center gap-3 sm:gap-4 lg:mb-6">
-        <button
+        <GlassButton
+          variant="secondary"
+          size="icon-lg"
+          :icon="playModeIconClass"
+          :active="playMode !== 'list'"
           @click="togglePlayMode"
-          class="control-btn small"
-          :class="{ active: playMode !== 'list' }"
-        >
-          <component :is="'span'" :class="playModeIconClass" class="h-5 w-5" />
-        </button>
+        />
 
-        <button @click="previous" class="control-btn">
-          <span class="icon-[mdi--skip-previous] h-6 w-6"></span>
-        </button>
+        <GlassButton
+          variant="secondary"
+          size="icon-lg"
+          :icon="'icon-[mdi--skip-previous]'"
+          @click="previous"
+        />
 
-        <button
-          @click="handleTogglePlay"
+        <GlassButton
+          variant="primary"
+          size="icon-lg"
+          :icon="isLoading ? 'icon-[mdi--loading]' : !isPlaying ? 'icon-[mdi--play]' : 'icon-[mdi--pause]'"
+          :loading="isLoading"
           :disabled="isLoading"
-          class="play-btn"
-          :class="isLoading ? 'loading' : ''"
-        >
-          <span v-if="isLoading" class="icon-[mdi--loading] h-8 w-8 animate-spin"></span>
-          <span v-else-if="!isPlaying" class="icon-[mdi--play] ml-1 h-8 w-8"></span>
-          <span v-else class="icon-[mdi--pause] h-8 w-8"></span>
-        </button>
+          class="play-btn-custom"
+          @click="handleTogglePlay"
+        />
 
-        <button @click="next" class="control-btn">
-          <span class="icon-[mdi--skip-next] h-6 w-6"></span>
-        </button>
+        <GlassButton
+          variant="secondary"
+          size="icon-lg"
+          :icon="'icon-[mdi--skip-next]'"
+          @click="next"
+        />
 
         <PlaylistBubble
           v-model:show="isRecentOpen"
@@ -684,18 +688,24 @@ onUnmounted(() => {
           :offset-y="10"
         >
           <template #trigger>
-            <button class="control-btn small">
-              <span class="icon-[mdi--playlist-music] h-5 w-5"></span>
-            </button>
+            <GlassButton
+              variant="secondary"
+              size="icon-lg"
+              :icon="'icon-[mdi--playlist-music]'"
+            />
           </template>
         </PlaylistBubble>
       </div>
 
       <div class="flex w-full max-w-sm items-center justify-between px-4">
-        <button class="comment-btn" @click="isCommentsOpen = true">
-          <span class="icon-[mdi--comment-outline] h-5 w-5"></span>
-          <span>{{ commentCount }}</span>
-        </button>
+        <GlassButton
+          variant="secondary"
+          size="md"
+          :icon="'icon-[mdi--comment-outline]'"
+          @click="isCommentsOpen = true"
+        >
+          {{ commentCount }}
+        </GlassButton>
 
         <div class="volume-control flex items-center gap-2">
           <VolumeControl />
@@ -754,76 +764,20 @@ onUnmounted(() => {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.toolbar-btn {
-  @apply text-primary/70 flex h-8 w-8 items-center justify-center rounded-xl transition-all;
-}
-.toolbar-btn:hover {
-  @apply text-primary bg-white/10;
-}
-.toolbar-btn.active {
-  @apply text-primary bg-white/15 ring-1 ring-white/20;
+/* 自定义播放按钮样式 - 覆盖 GlassButton 的 primary 样式 */
+.play-btn-custom {
+  @apply h-18 w-18 shadow-2xl;
+  background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%) !important;
+  box-shadow: 0 8px 32px rgba(236, 72, 153, 0.4) !important;
 }
 
-.toolbar-btn-text {
-  @apply text-primary/70 flex items-center gap-2 rounded-xl px-3 py-1.5 text-sm transition-all;
-}
-.toolbar-btn-text:hover {
-  @apply text-primary bg-white/10;
-}
-.toolbar-btn-text.active {
-  @apply text-primary bg-white/15 ring-1 ring-white/20;
-}
-
-.action-btn {
-  @apply text-primary/80 flex h-11 w-11 items-center justify-center rounded-full transition-all duration-300;
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-.action-btn:hover {
-  @apply text-primary scale-105 bg-white/15;
-}
-.action-btn.active {
-  @apply bg-white/20 text-yellow-300;
-}
-.action-btn.close-btn:hover {
-  @apply bg-white/20;
-}
-
-.control-btn {
-  @apply text-primary/80 flex h-14 w-14 items-center justify-center rounded-full transition-all duration-300;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(8px);
-}
-.control-btn:hover {
-  @apply text-primary scale-110 bg-white/20;
-}
-.control-btn.small {
-  @apply h-11 w-11;
-}
-.control-btn.active {
-  background: rgba(236, 72, 153, 0.3);
-}
-
-.play-btn {
-  @apply text-primary flex h-18 w-18 items-center justify-center rounded-full shadow-2xl transition-all duration-300;
-  background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
-  box-shadow: 0 8px 32px rgba(236, 72, 153, 0.4);
-}
-.play-btn:hover {
+.play-btn-custom:hover {
   @apply scale-110;
-  box-shadow: 0 12px 40px rgba(236, 72, 153, 0.5);
-}
-.play-btn.loading {
-  @apply cursor-wait opacity-70;
+  box-shadow: 0 12px 40px rgba(236, 72, 153, 0.5) !important;
 }
 
-.comment-btn {
-  @apply text-primary/70 flex items-center gap-2 rounded-2xl px-4 py-2 text-sm transition-all;
-  background: rgba(255, 255, 255, 0.08);
-}
-.comment-btn:hover {
-  @apply text-primary bg-white/15;
+.play-btn-custom:disabled {
+  @apply cursor-wait opacity-70;
 }
 
 .vinyl-disc {

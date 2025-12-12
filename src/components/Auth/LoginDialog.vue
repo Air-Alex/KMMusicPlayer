@@ -8,6 +8,7 @@ import {
   loginStatus,
 } from '@/api'
 import { useUserStore } from '@/stores/modules/user'
+import GlassButton from '@/components/Ui/GlassButton.vue'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 const emit = defineEmits<{ (e: 'close'): void; (e: 'success'): void }>()
@@ -153,12 +154,14 @@ watch(visible, v => {
     <Transition name="dialog" appear @after-leave="handleAfterLeave">
       <div v-if="visible" class="relative z-10 w-full max-w-xl">
         <div class="glass-container-strong overflow-hidden">
-          <button
-            class="absolute top-4 right-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-white/10 transition-all hover:bg-white/20"
-            @click="visible = false"
-          >
-            <span class="icon-[mdi--close] text-primary h-4 w-4" />
-          </button>
+          <div class="absolute top-4 right-4 z-20">
+            <GlassButton
+              variant="ghost"
+              size="icon-sm"
+              :icon="'icon-[mdi--close]'"
+              @click="visible = false"
+            />
+          </div>
 
           <div class="relative p-6 pb-4">
             <div class="mb-6 flex items-center gap-4">
@@ -172,22 +175,26 @@ watch(visible, v => {
             </div>
 
             <div class="glass-nav mb-6 inline-flex w-full gap-1 rounded-xl p-1">
-              <button
-                class="flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-all"
-                :class="tab === 'password' ? 'bg-white/15 text-primary shadow-sm' : 'text-primary/60 hover:text-primary/80'"
+              <GlassButton
+                variant="ghost"
+                size="md"
+                :icon="'icon-[mdi--form-textbox-password]'"
+                :active="tab === 'password'"
+                :block="true"
                 @click="tab = 'password'"
               >
-                <span class="icon-[mdi--form-textbox-password] h-4 w-4" />
                 {{ t('auth.passwordLogin') || '密码登录' }}
-              </button>
-              <button
-                class="flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-all"
-                :class="tab === 'qr' ? 'bg-white/15 text-primary shadow-sm' : 'text-primary/60 hover:text-primary/80'"
+              </GlassButton>
+              <GlassButton
+                variant="ghost"
+                size="md"
+                :icon="'icon-[mdi--qrcode-scan]'"
+                :active="tab === 'qr'"
+                :block="true"
                 @click="tab = 'qr'"
               >
-                <span class="icon-[mdi--qrcode-scan] h-4 w-4" />
                 {{ t('auth.qrLogin') || '扫码登录' }}
-              </button>
+              </GlassButton>
             </div>
           </div>
 
@@ -195,22 +202,24 @@ watch(visible, v => {
             <div v-if="tab === 'password'" key="pwd" class="px-6 pb-6">
               <div class="mb-5 flex justify-center">
                 <div class="glass-nav inline-flex gap-1 rounded-full p-1">
-                  <button
-                    class="flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-medium transition-all"
-                    :class="!useEmail ? 'bg-white/15 text-primary' : 'text-primary/60 hover:text-primary/80'"
+                  <GlassButton
+                    variant="ghost"
+                    size="xs"
+                    :icon="'icon-[mdi--cellphone]'"
+                    :active="!useEmail"
                     @click="useEmail = false"
                   >
-                    <span class="icon-[mdi--cellphone] h-3.5 w-3.5" />
                     {{ t('auth.phone') || '手机号' }}
-                  </button>
-                  <button
-                    class="flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-medium transition-all"
-                    :class="useEmail ? 'bg-white/15 text-primary' : 'text-primary/60 hover:text-primary/80'"
+                  </GlassButton>
+                  <GlassButton
+                    variant="ghost"
+                    size="xs"
+                    :icon="'icon-[mdi--email-outline]'"
+                    :active="useEmail"
                     @click="useEmail = true"
                   >
-                    <span class="icon-[mdi--email-outline] h-3.5 w-3.5" />
                     {{ t('auth.email') || '邮箱' }}
-                  </button>
+                  </GlassButton>
                 </div>
               </div>
 
@@ -252,15 +261,18 @@ watch(visible, v => {
                 </div>
               </div>
 
-              <button
-                class="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-pink-500 to-purple-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-pink-500/25 transition-all hover:shadow-xl hover:shadow-pink-500/30 disabled:opacity-50 disabled:shadow-none"
+              <GlassButton
+                variant="primary"
+                size="lg"
+                :icon="loading ? 'icon-[mdi--loading]' : 'icon-[mdi--login]'"
+                :loading="loading"
                 :disabled="loading || (!useEmail && !phone) || (useEmail && !email) || !password"
+                :block="true"
+                class="mt-6"
                 @click="doPasswordLogin"
               >
-                <span v-if="loading" class="icon-[mdi--loading] h-4 w-4 animate-spin" />
-                <span v-else class="icon-[mdi--login] h-4 w-4" />
                 {{ loading ? (t('common.loading') || '登录中...') : t('auth.login') }}
-              </button>
+              </GlassButton>
             </div>
 
             <div v-else key="qr" class="px-6 pb-6">
@@ -287,14 +299,16 @@ watch(visible, v => {
                   <p v-if="state.qrUser?.nickname && !state.qrUser?.message" class="text-primary mt-1 font-medium">{{ state.qrUser.nickname }}</p>
                 </div>
 
-                <button
-                  class="glass-button flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm transition-all hover:bg-white/15"
+                <GlassButton
+                  variant="secondary"
+                  size="md"
+                  :icon="loading ? 'icon-[mdi--loading]' : 'icon-[mdi--refresh]'"
+                  :loading="loading"
                   :disabled="loading"
                   @click="genQr"
                 >
-                  <span :class="loading ? 'icon-[mdi--loading] animate-spin' : 'icon-[mdi--refresh]'" class="text-primary h-4 w-4" />
-                  <span class="text-primary">{{ t('auth.refreshQr') || '刷新二维码' }}</span>
-                </button>
+                  {{ t('auth.refreshQr') || '刷新二维码' }}
+                </GlassButton>
               </div>
             </div>
           </Transition>

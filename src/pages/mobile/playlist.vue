@@ -2,6 +2,7 @@
 import { playlistDetail, playlistTrackAll } from '@/api'
 import { useAudio } from '@/composables/useAudio'
 import LazyImage from '@/components/Ui/LazyImage.vue'
+import GlassButton from '@/components/Ui/GlassButton.vue'
 import PlaylistCommentsPopup from '@/components/Mobile/PlaylistCommentsPopup.vue'
 import { useI18n } from 'vue-i18n'
 import { formatCount } from '@/utils/time'
@@ -147,7 +148,7 @@ const toggleCollect = () => {
                 imgClass="cover-image h-32 w-32 rounded-2xl object-cover"
               />
               <div
-                class="play-count-badge text-primary absolute -right-1 -bottom-1 flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium"
+                class="play-count-badge text-white absolute -right-1 -bottom-1 flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium"
               >
                 <span class="icon-[mdi--play] h-3 w-3"></span>
                 {{ state.info.playCount }}
@@ -156,7 +157,7 @@ const toggleCollect = () => {
 
             <div class="flex min-w-0 flex-1 flex-col justify-between py-1">
               <div>
-                <h1 class="text-primary mb-2 line-clamp-2 text-lg leading-tight font-bold">
+                <h1 class="text-white mb-2 line-clamp-2 text-lg leading-tight font-bold">
                   {{ state.info.name }}
                 </h1>
                 <div class="creator-info flex items-center gap-2">
@@ -166,10 +167,10 @@ const toggleCollect = () => {
                     alt=""
                     class="h-5 w-5 rounded-full"
                   />
-                  <span class="text-primary/70 text-xs">{{ state.info.creator }}</span>
+                  <span class="text-white/70 text-xs">{{ state.info.creator }}</span>
                 </div>
               </div>
-              <div class="text-primary/60 mt-2 flex items-center gap-3 text-[11px]">
+              <div class="text-white/60 mt-2 flex items-center gap-3 text-[11px]">
                 <span class="flex items-center gap-1">
                   <span class="icon-[mdi--music-note] h-3.5 w-3.5"></span>
                   {{ $t('commonUnits.songsShort', state.info.songCount) }}
@@ -188,12 +189,12 @@ const toggleCollect = () => {
             @click="state.showFullDesc = !state.showFullDesc"
           >
             <p
-              class="text-primary/60 text-xs leading-relaxed"
+              class="text-white/60 text-xs leading-relaxed"
               :class="state.showFullDesc ? '' : 'line-clamp-2'"
             >
               {{ state.info.description }}
             </p>
-            <span class="text-primary/40 mt-1 inline-flex items-center text-[10px]">
+            <span class="text-white/40 mt-1 inline-flex items-center text-[10px]">
               {{ state.showFullDesc ? $t('common.collapse') : $t('common.expand') }}
               <span
                 :class="state.showFullDesc ? 'icon-[mdi--chevron-up]' : 'icon-[mdi--chevron-down]'"
@@ -205,41 +206,39 @@ const toggleCollect = () => {
       </div>
 
       <div class="action-bar flex items-center gap-3 px-4 py-3">
-        <button
-          class="play-all-btn text-primary flex flex-1 items-center justify-center gap-2 rounded-full py-2.5 text-sm font-medium"
+        <GlassButton
+          variant="primary"
+          icon="icon-[mdi--play-circle]"
+          block
           @click="playAll"
         >
-          <span class="icon-[mdi--play-circle] h-5 w-5"></span>
           {{ t('actions.playAll') }}
-        </button>
-        <button
-          class="shuffle-btn flex flex-1 items-center justify-center gap-2 rounded-full py-2.5 text-sm font-medium"
+        </GlassButton>
+
+        <GlassButton
+          variant="secondary"
+          icon="icon-[mdi--shuffle-variant]"
+          block
           @click="shufflePlay"
         >
-          <span class="icon-[mdi--shuffle-variant] h-5 w-5"></span>
           {{ t('actions.shufflePlay') }}
-        </button>
-        <button
-          class="collect-btn flex h-10 w-10 items-center justify-center rounded-full"
-          :class="state.collected ? 'collected' : ''"
+        </GlassButton>
+
+        <GlassButton
+          :variant="state.collected ? 'primary' : 'secondary'"
+          :active="state.collected"
+          size="icon-md"
+          :icon="state.collected ? 'icon-[mdi--heart]' : 'icon-[mdi--heart-outline]'"
           @click="toggleCollect"
-        >
-          <span
-            :class="state.collected ? 'icon-[mdi--heart]' : 'icon-[mdi--heart-outline]'"
-            class="h-5 w-5"
-          ></span>
-        </button>
-        <button
-          class="comment-btn flex h-10 w-10 items-center justify-center rounded-full"
-          @click="state.showComments = true"
-        >
-          <span class="icon-[mdi--message-processing-outline] h-5 w-5"></span>
-        </button>
-        <PlaylistCommentsPopup
-          v-model:show="state.showComments"
-          :id="playlistId"
-          type="playlist"
         />
+
+        <GlassButton
+          variant="secondary"
+          size="icon-md"
+          icon="icon-[mdi--message-processing-outline]"
+          @click="state.showComments = true"
+        />
+        <PlaylistCommentsPopup v-model:show="state.showComments" :id="playlistId" type="playlist" />
       </div>
 
       <div class="flex-1 overflow-auto px-4 pb-6">
@@ -264,8 +263,7 @@ const toggleCollect = () => {
   background: linear-gradient(
     to bottom,
     rgba(0, 0, 0, 0.3) 0%,
-    rgba(0, 0, 0, 0.5) 50%,
-    var(--glass-bg) 100%
+    rgba(0, 0, 0, 0.6) 100%
   );
 }
 
@@ -281,57 +279,6 @@ const toggleCollect = () => {
   background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4));
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-}
-
-.play-all-btn {
-  background: linear-gradient(135deg, #ec4899, #8b5cf6);
-  box-shadow: 0 4px 16px rgba(236, 72, 153, 0.35);
-  transition: all 0.3s ease;
-}
-
-.play-all-btn:active {
-  transform: scale(0.97);
-  box-shadow: 0 2px 8px rgba(236, 72, 153, 0.3);
-}
-
-.shuffle-btn {
-  background: var(--glass-card-bg);
-  color: var(--glass-text);
-  border: 1px solid var(--glass-border);
-  transition: all 0.3s ease;
-}
-
-.shuffle-btn:active {
-  transform: scale(0.97);
-  background: var(--glass-hover-item-bg);
-}
-
-.collect-btn {
-  background: var(--glass-card-bg);
-  color: var(--glass-text);
-  border: 1px solid var(--glass-border);
-  transition: all 0.3s ease;
-}
-
-.collect-btn:active {
-  transform: scale(0.95);
-}
-
-.collect-btn.collected {
-  background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(139, 92, 246, 0.2));
-  border-color: rgba(236, 72, 153, 0.3);
-  color: #ec4899;
-}
-
-.comment-btn {
-  background: var(--glass-card-bg);
-  color: var(--glass-text);
-  border: 1px solid var(--glass-border);
-  transition: all 0.3s ease;
-}
-
-.comment-btn:active {
-  transform: scale(0.95);
 }
 
 .desc-section {

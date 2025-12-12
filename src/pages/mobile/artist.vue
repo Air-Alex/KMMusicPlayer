@@ -166,26 +166,26 @@ const tabs = ['artistPage.tabs.hotSongs', 'artistPage.tabs.albums']
               />
             </div>
 
-            <h1 class="text-primary mb-1 text-xl font-bold">{{ state.info.name }}</h1>
-            <p v-if="state.info.alias?.length" class="text-primary/50 mb-3 text-xs">
+            <h1 class="mb-1 text-xl font-bold text-white">{{ state.info.name }}</h1>
+            <p v-if="state.info.alias?.length" class="mb-3 text-xs text-white/50">
               {{ state.info.alias.join(' / ') }}
             </p>
 
-            <div class="text-primary/70 mb-4 flex items-center gap-6 text-center text-xs">
+            <div class="mb-4 flex items-center gap-6 text-center text-xs text-white/70">
               <div class="flex flex-col items-center">
-                <span class="text-primary text-base font-semibold">{{ state.info.musicSize }}</span>
+                <span class="text-base font-semibold text-white">{{ state.info.musicSize }}</span>
                 <span>{{ $t('artistPage.stats.songs') }}</span>
               </div>
               <div class="flex flex-col items-center">
-                <span class="text-primary text-base font-semibold">{{ state.info.albumSize }}</span>
+                <span class="text-base font-semibold text-white">{{ state.info.albumSize }}</span>
                 <span>{{ $t('artistPage.stats.albums') }}</span>
               </div>
               <div class="flex flex-col items-center">
-                <span class="text-primary text-base font-semibold">{{ state.info.mvSize }}</span>
+                <span class="text-base font-semibold text-white">{{ state.info.mvSize }}</span>
                 <span>{{ $t('artistPage.stats.mvs') }}</span>
               </div>
               <div v-if="state.info.fansCount" class="flex flex-col items-center">
-                <span class="text-primary text-base font-semibold">{{
+                <span class="text-base font-semibold text-white">{{
                   formatCount(state.info.fansCount)
                 }}</span>
                 <span>{{ $t('artistPage.stats.fans') }}</span>
@@ -194,7 +194,7 @@ const tabs = ['artistPage.tabs.hotSongs', 'artistPage.tabs.albums']
 
             <p
               v-if="state.info.briefDesc"
-              class="text-primary/60 mb-4 line-clamp-2 max-w-xs text-center text-xs leading-relaxed"
+              class="mb-4 line-clamp-2 max-w-xs text-center text-xs leading-relaxed text-white/60"
             >
               {{ state.info.briefDesc }}
             </p>
@@ -204,14 +204,14 @@ const tabs = ['artistPage.tabs.hotSongs', 'artistPage.tabs.albums']
 
       <div class="action-bar flex items-center gap-3 px-4 py-3">
         <button
-          class="play-all-btn text-primary flex flex-1 items-center justify-center gap-2 rounded-full py-2.5 text-sm font-medium"
+          class="bg-brand shadow-brand/20 hover:bg-brand/90 flex flex-1 items-center justify-center gap-2 rounded-full py-2.5 text-sm font-medium text-white shadow-lg transition-all active:scale-95"
           @click="playAll"
         >
           <span class="icon-[mdi--play-circle] h-5 w-5"></span>
           {{ t('actions.playAll') }}
         </button>
         <button
-          class="shuffle-btn flex flex-1 items-center justify-center gap-2 rounded-full py-2.5 text-sm font-medium"
+          class="btn-ghost border-primary/10 bg-primary/5 flex flex-1 items-center justify-center gap-2 rounded-full border py-2.5 text-sm font-medium"
           @click="shufflePlay"
         >
           <span class="icon-[mdi--shuffle-variant] h-5 w-5"></span>
@@ -270,7 +270,9 @@ const tabs = ['artistPage.tabs.hotSongs', 'artistPage.tabs.albums']
               </div>
             </div>
           </div>
-          <div v-if="!state.albums.length" class="empty-text py-12 text-center">{{ $t('artistPage.albumsEmpty') }}</div>
+          <div v-if="!state.albums.length" class="empty-text py-12 text-center">
+            {{ $t('artistPage.albumsEmpty') }}
+          </div>
         </section>
       </div>
     </template>

@@ -4,6 +4,7 @@ import { useAudio } from '@/composables/useAudio'
 import type { Song as StoreSong } from '@/stores/interface'
 import { PlaylistInfo, PlaylistSong, CommentItem } from '@/typings'
 import LazyImage from '@/components/Ui/LazyImage.vue'
+import GlassButton from '@/components/Ui/GlassButton.vue'
 import { formatCount } from '@/utils/time'
 import { useI18n } from 'vue-i18n'
 const route = useRoute()
@@ -44,11 +45,6 @@ const { activeTab, playlistInfo, songs, newComment, comments, isPageLoading, sim
 const { setPlaylist, play } = useAudio()
 const { t } = useI18n()
 
-const gradients: string[] = ['from-purple-500 to-pink-500']
-const emojis: string[] = ['🎵', '🎶', '♪', '♫', '🎼']
-
-const pickGradient = (): string => gradients[Math.floor(Math.random() * gradients.length)]
-
 const loadPlaylist = async (id: number) => {
   try {
     const [detailRes, tracksRes] = await Promise.all([
@@ -68,8 +64,6 @@ const loadPlaylist = async (id: number) => {
         playCount: detail?.playCount || 0,
         likes: String(detail?.subscribedCount || detail?.bookedCount || 0),
         category: detail?.tags?.[0] || t('home.playlistFallback'),
-        emoji: state.playlistInfo.emoji,
-        gradient: pickGradient(),
         coverImgUrl: detail?.coverImgUrl || '',
       }
     }
@@ -77,7 +71,7 @@ const loadPlaylist = async (id: number) => {
     const tracks =
       (tracksRes as any)?.songs || (tracksRes as any)?.data?.songs || (tracksRes as any)?.data || []
     if (Array.isArray(tracks) && tracks.length) {
-      state.songs = tracks.map((t: any, i: number) => ({
+      state.songs = tracks.map((t: any) => ({
         id: t?.id || 0,
         mvId: t?.mv,
         name: t?.name || '',
@@ -94,8 +88,6 @@ const loadPlaylist = async (id: number) => {
         album: t?.al?.name || t?.album?.name || '',
         albumId: t?.al?.id || t?.album?.id || 0,
         duration: t?.dt ?? t?.duration ?? 0,
-        emoji: emojis[i % emojis.length],
-        gradient: gradients[i % gradients.length],
         liked: false,
         cover: t?.al?.picUrl || t?.album?.picUrl || '',
       }))
@@ -111,9 +103,8 @@ const loadComments = async (id: number) => {
     const res = await commentNew({ id, type: 2, sortType: 1, pageNo: 1, pageSize: 10 })
     const list = (res as any)?.data?.comments || (res as any)?.comments || []
     if (Array.isArray(list)) {
-      state.comments = list.map((c: any, i: number) => ({
+      state.comments = list.map((c: any) => ({
         username: c?.user?.nickname || t('comments.user'),
-        avatarGradient: gradients[i % gradients.length],
         time: c?.time ? new Date(c.time).toLocaleString() : '',
         content: c?.content || '',
         likes: c?.likedCount || 0,
@@ -121,7 +112,6 @@ const loadComments = async (id: number) => {
         replies: (c?.beReplied || []).map((r: any) => ({
           username: r?.user?.nickname || t('comments.user'),
           avatarUrl: r?.user?.avatarUrl || '',
-          avatarGradient: gradients[(i + 1) % gradients.length],
           time: '',
           content: r?.content || '',
         })),
@@ -192,8 +182,6 @@ const mapToStoreSong = (s: PlaylistSong): StoreSong => ({
   album: s.album,
   duration: s.duration,
   cover: s.cover,
-  emoji: s.emoji,
-  gradient: s.gradient,
   liked: s.liked,
 })
 
@@ -245,28 +233,25 @@ const tabs = [
     <PageSkeleton v-if="isPageLoading" :sections="['hero', 'list']" :list-count="12" />
     <template v-else>
       <div class="relative">
-        <div class="absolute inset-0 overflow-hidden">
+        <div class="bg-pk absolute inset-0 overflow-hidden">
           <img
             :src="playlistInfo.coverImgUrl + '?param=100y100'"
             class="h-full w-full scale-150 object-cover opacity-30 blur-3xl"
           />
-          <div
-            class="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-(--color-background)"
-          ></div>
         </div>
 
-        <div class="relative z-10 px-6 pt-6 pb-4 lg:px-8">
+        <div class="relative z-10 rounded-4xl px-6 pt-6 pb-4">
           <div class="flex flex-col gap-6 lg:flex-row lg:gap-8">
             <div class="group relative mx-auto w-56 shrink-0 lg:mx-0 lg:w-64">
               <div
                 class="aspect-square overflow-hidden rounded-2xl shadow-2xl ring-1 ring-white/10"
               >
-              <LazyImage
-                :src="playlistInfo.coverImgUrl + '?param=300y300'"
-                :alt="$t('components.songList.coverAlt')"
-                imgClass="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                wrapperClass="h-full w-full"
-              />
+                <LazyImage
+                  :src="playlistInfo.coverImgUrl + '?param=300y300'"
+                  :alt="$t('components.songList.coverAlt')"
+                  imgClass="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  wrapperClass="h-full w-full"
+                />
               </div>
               <button
                 class="absolute inset-0 flex items-center justify-center rounded-2xl bg-black/40 opacity-0 transition-all duration-300 group-hover:opacity-100"
@@ -315,22 +300,24 @@ const tabs = [
               <div class="mb-5 flex flex-wrap items-center justify-center gap-6 lg:justify-start">
                 <div class="flex items-center gap-1.5">
                   <span class="icon-[mdi--music-note] text-primary/50 h-4 w-4"></span>
-                <span class="text-primary/70 text-sm"
-                  >{{ $t('commonUnits.songsShort', playlistInfo.songCount) }}
+                  <span class="text-primary/70 text-sm"
+                    >{{ $t('commonUnits.songsShort', playlistInfo.songCount) }}
                   </span>
-              </div>
-              <div class="flex items-center gap-1.5">
-                <span class="icon-[mdi--play-circle-outline] text-primary/50 h-4 w-4"></span>
-                <span class="text-primary/70 text-sm"
-                  >{{ formatCount(playlistInfo.playCount || 0) }} {{ $t('common.stats.plays') }}</span
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <span class="icon-[mdi--play-circle-outline] text-primary/50 h-4 w-4"></span>
+                  <span class="text-primary/70 text-sm"
+                    >{{ formatCount(playlistInfo.playCount || 0) }}
+                    {{ $t('common.stats.plays') }}</span
                   >
-              </div>
-              <div class="flex items-center gap-1.5">
-                <span class="icon-[mdi--heart] h-4 w-4 text-red-400/70"></span>
-                <span class="text-primary/70 text-sm"
-                  >{{ formatCount(Number(playlistInfo.likes) || 0) }} {{ $t('common.stats.favorites') }}</span
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <span class="icon-[mdi--heart] h-4 w-4 text-red-400/70"></span>
+                  <span class="text-primary/70 text-sm"
+                    >{{ formatCount(Number(playlistInfo.likes) || 0) }}
+                    {{ $t('common.stats.favorites') }}</span
                   >
-              </div>
+                </div>
               </div>
 
               <div class="flex flex-wrap items-center justify-center gap-3 lg:justify-start">
@@ -465,14 +452,6 @@ const tabs = [
                     :src="comment.avatarUrl + '?param=80y80'"
                     class="h-10 w-10 shrink-0 rounded-full ring-2 ring-white/10"
                   />
-                  <div
-                    v-else
-                    class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-linear-to-br text-sm font-medium text-white"
-                    :class="comment.avatarGradient"
-                  >
-                    {{ comment.username.charAt(0) }}
-                  </div>
-
                   <div class="min-w-0 flex-1">
                     <div class="mb-1.5 flex items-center gap-2">
                       <span class="text-primary text-sm font-medium">{{ comment.username }}</span>

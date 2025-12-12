@@ -4,6 +4,7 @@ import type { Song } from '@/stores/interface'
 import { formatDuration } from '@/utils/time'
 import { RouterLink, useRouter } from 'vue-router'
 import LazyImage from '@/components/Ui/LazyImage.vue'
+import GlassButton from '@/components/Ui/GlassButton.vue'
 import { useI18n } from 'vue-i18n'
 
 interface Props {
@@ -134,13 +135,17 @@ const downloadSong = (song: Song, index: number) => {
               <span class="bar" :class="{ animate: isPlaying }"></span>
               <span class="bar" :class="{ animate: isPlaying }"></span>
             </div>
-            <button
+            <div
               v-if="!isCurrent(song)"
-              class="text-primary hidden transition-colors group-hover:block hover:text-pink-400"
+              class="hidden group-hover:block"
               @click.stop="playSong(song, index)"
             >
-              <span class="icon-[mdi--play] h-6 w-6"></span>
-            </button>
+              <GlassButton
+                variant="ghost"
+                size="icon-sm"
+                :icon="'icon-[mdi--play]'"
+              />
+            </div>
           </div>
 
           <div class="grid min-w-0 flex-1 grid-cols-12 items-center gap-4">
@@ -222,29 +227,29 @@ const downloadSong = (song: Song, index: number) => {
             <div
               class="col-span-2 flex items-center justify-center gap-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
             >
-              <button
+              <GlassButton
                 v-if="song.mvId"
-                class="text-primary/70 hover:text-primary rounded-full p-2 transition-all hover:bg-white/10"
+                variant="ghost"
+                size="icon-sm"
+                :icon="'icon-[mdi--movie-open-play]'"
                 :title="t('common.playMV')"
                 @click.stop="openMV(song, index)"
-              >
-                <span class="icon-[mdi--movie-open-play] h-5 w-5"></span>
-              </button>
-              <button
+              />
+              <GlassButton
                 v-if="song.id"
-                class="text-primary/70 hover:text-primary rounded-full p-2 transition-all hover:bg-white/10"
+                variant="ghost"
+                size="icon-sm"
+                :icon="'icon-[mdi--information-outline]'"
                 :title="t('common.detail')"
                 @click.stop="router.push(`/song/${song.id}`)"
-              >
-                <span class="icon-[mdi--information-outline] h-5 w-5"></span>
-              </button>
-              <button
-                class="text-primary/70 hover:text-primary rounded-full p-2 transition-all hover:bg-white/10"
+              />
+              <GlassButton
+                variant="ghost"
+                size="icon-sm"
+                :icon="'icon-[mdi--tray-arrow-down]'"
                 :title="t('common.download')"
                 @click.stop="downloadSong(song, index)"
-              >
-                <span class="icon-[mdi--tray-arrow-down] h-5 w-5"></span>
-              </button>
+              />
             </div>
           </div>
         </div>

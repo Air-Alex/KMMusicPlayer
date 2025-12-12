@@ -114,7 +114,7 @@ const router = createRouter({
           name: 'artists',
           component: responsive(
             () => import('@/pages/artists.vue'),
-            () => import('@/pages/artists.vue')
+            () => import('@/pages/mobile/artists.vue')
           ),
         },
         {
@@ -122,7 +122,7 @@ const router = createRouter({
           name: 'new-albums',
           component: responsive(
             () => import('@/pages/new-albums.vue'),
-            () => import('@/pages/new-albums.vue')
+            () => import('@/pages/mobile/new-albums.vue')
           ),
         },
         {

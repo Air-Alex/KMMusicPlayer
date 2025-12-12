@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useSettingsStore } from '@/stores/modules/settings'
 import GlassSelect from '@/components/Ui/GlassSelect.vue'
+import GlassButton from '@/components/Ui/GlassButton.vue'
 import { useI18n } from 'vue-i18n'
 
 const settings = useSettingsStore()
@@ -166,7 +167,9 @@ const previewStyle = computed(() => {
 
         <div class="flex items-center justify-between">
           <p class="text-xs text-primary/60">{{ t('components.background.ultimate.tip') }}</p>
-          <button class="rounded bg-white/10 px-3 py-2 text-primary hover:bg-white/20" @click="reset">{{ t('components.background.common.reset') }}</button>
+          <GlassButton variant="secondary" size="sm" @click="reset">
+            {{ t('components.background.common.reset') }}
+          </GlassButton>
         </div>
       </div>
 
